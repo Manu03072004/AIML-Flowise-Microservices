@@ -1,16 +1,17 @@
-from pydantic import BaseModel
+import os
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
 
-class SummarizeInput(BaseModel):
-    text: str
+load_dotenv()
 
-class QAInput(BaseModel):
-    context: str
-    question: str
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-class LearningPathInput(BaseModel):
-    skills: str
+llm = ChatOpenAI(
+    model="openrouter/gpt-4o-mini",
+    temperature=0.5,
+    openai_api_key=OPENROUTER_API_KEY,
+    openai_api_base="https://openrouter.ai/api/v1"
+)
 
-class PDFQAInput(BaseModel):
-    question: str
 
 
