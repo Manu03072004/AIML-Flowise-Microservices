@@ -1,16 +1,15 @@
 import nest_asyncio
 import uvicorn
 import threading
-from pyngrok import ngrok
 from fastapi import FastAPI, UploadFile, File
 
 from app.models import SummarizeInput, QAInput, LearningPathInput, PDFQAInput
 from app.services import summarizer, qa_pipeline, text_generator, process_pdf, query_pdf
 
-# Patch asyncio for notebooks/Colab
+# Patch asyncio for notebooks (optional)
 nest_asyncio.apply()
 
-# Initialize FastAPI with repo title
+# Initialize FastAPI
 app = FastAPI(title="AIML-Flowise-Microservices")
 
 # ------------------------
@@ -46,20 +45,7 @@ async def qa_pdf(data: PDFQAInput):
     return {"answer": answer, "context": context}
 
 # ------------------------
-# Run FastAPI in background thread
+# Run FastAPI
 # ------------------------
-def run_app():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-thread = threading.Thread(target=run_app)
-thread.start()
-
-# ------------------------
-# Ngrok public URL (temporary)
-# ------------------------
-# Replace with your ngrok auth token
-!ngrok authtoken 323AJdV2G2TyaCWMJWW6R7Acs7Q_5UmhesJXxjfXKpcL2S82y
-public_url = ngrok.connect(8000)
-print("Your API is live at:", public_url)
-print("Add /docs at the end to open Swagger UI")
-
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)
